@@ -30,6 +30,31 @@ final class HelloWorldUITests: XCTestCase {
         XCTAssertEqual(label.label, "Hello, World!")
     }
 
+    func testPersonalizedGreeting() throws {
+        let nameField = app.textFields["nameField"]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 5))
+        nameField.tap()
+        nameField.typeText("Alex")
+        app.buttons["sayHelloButton"].tap()
+
+        XCTAssertEqual(app.staticTexts["helloWorldLabel"].label, "Hello, Alex!")
+        XCTAssertFalse(app.staticTexts["nameError"].exists)
+    }
+
+    func testEmptyNameShowsErrorAndCanRecover() throws {
+        app.buttons["sayHelloButton"].tap()
+        XCTAssertTrue(app.staticTexts["nameError"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["helloWorldLabel"].label, "Hello, World!")
+
+        let nameField = app.textFields["nameField"]
+        nameField.tap()
+        nameField.typeText("Alex")
+        app.buttons["sayHelloButton"].tap()
+
+        XCTAssertFalse(app.staticTexts["nameError"].exists)
+        XCTAssertEqual(app.staticTexts["helloWorldLabel"].label, "Hello, Alex!")
+    }
+
     func testAppLaunchPerformance() throws {
         measure(metrics: [XCTApplicationLaunchMetric()]) {
             XCUIApplication().launch()

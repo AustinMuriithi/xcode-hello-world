@@ -3,20 +3,16 @@ import XCTest
 
 final class HelloWorldTests: XCTestCase {
 
-    func testExample() throws {
-        // Baseline sanity test
-        XCTAssertTrue(true, "Basic test passes")
+    func testGreetingUsesName() {
+        XCTAssertEqual(ContentView.greeting(for: "Alex"), "Hello, Alex!")
     }
 
-    func testArithmetic() throws {
-        // Verify the test environment works correctly
-        XCTAssertEqual(1 + 1, 2, "Basic arithmetic must work")
+    func testGreetingTrimsSurroundingWhitespace() {
+        XCTAssertEqual(ContentView.greeting(for: "  Alex \n"), "Hello, Alex!")
     }
 
-    func testStringContents() throws {
-        let greeting = "Hello, World!"
-        XCTAssertFalse(greeting.isEmpty, "Greeting should not be empty")
-        XCTAssertTrue(greeting.contains("Hello"), "Greeting should contain Hello")
-        XCTAssertTrue(greeting.contains("World"), "Greeting should contain World")
+    func testGreetingRejectsEmptyOrWhitespaceOnlyName() {
+        XCTAssertNil(ContentView.greeting(for: ""))
+        XCTAssertNil(ContentView.greeting(for: " \n\t"))
     }
 }
